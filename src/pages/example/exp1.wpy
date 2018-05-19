@@ -1,0 +1,148 @@
+<style lang='less'>
+.container {
+  padding-left: 20rpx;
+  height: 100%;
+  .title {
+      font-size: 40rpx;
+      color: rgb(243, 138, 69)
+    }
+  view {
+    margin: 20rpx 0;
+  }
+  .btnWrap {
+    margin-bottom: 100rpx;
+  }
+  scroll-view {
+    height: 100%
+  }
+  .m-l-20 {
+    margin-left: 20rpx;
+  }
+  .computed {
+    margin-top: 30rpx;
+    view {
+      height: 50rpx;
+    }
+    button {
+      width: 40%;
+      display: inline-block;
+    }
+    input {
+      overflow: initial;
+      display: inline-block;
+      border-bottom: 1px solid #000;
+    }
+  }
+}
+</style>
+
+<template>
+  <view class='container'>
+    <scroll-view scroll-y	 bindscrolltolower="scrolltolower">
+      <view class="title">父子组件</view>
+      <child test2="aaaa" @childFn.user="parentFn" :test="test1" :syncTest.sync="aPlus" :twoWayTest.sync="inputValue">
+        <view slot="title">新的插槽数据</view>
+      </child>
+      <view>组件自定义函数：{{parent}}</view>
+      <view @tap.stop="log">主页绑定事件</view>
+      <view class="title">watcher监听器</view>
+      <view class="m-l-20">监听步数的值：{{watchNum}}</view>
+      <view class="computed">
+        <view class="title">计算属性</view>
+        <view>计算属性的值：{{aPlus}}</view>
+        <view class="stage">计数器数值：{{example.count}}</view>
+        <view>
+        步数值：
+        <input placeholder="请输入步数" auto-focus value="{{inputValue}}" @input='inputChange'/>
+      </view>
+      <view class="btnWrap">
+        <button @tap='plus'>+</button>
+        <button style='margin-left: 20rpx;' @tap='sub'>-</button>
+      </view>
+      </view>
+      <view>静态值{{test1}}</view>
+      <view>动态值{{aPlus}}</view>
+      <view>双向绑定{{inputValue}}</view>
+      <view>滚动了</view>
+      <view>滚动了</view>
+      <view>滚动了</view>
+      <view>滚动了</view>
+      <view>滚动了</view>
+      <view>滚动了</view>
+      <view>滚动了</view>
+      <view>滚动了</view>
+    </scroll-view>
+  </view>
+</template>
+
+<script >
+import wepy from 'wepy';
+import { connect  } from 'wepyx';
+import Child from '../../components/child';
+import Mixins from './mixins'
+
+@connect({
+  example: state => state.example
+})
+export default class Example extends wepy.page {
+  config = {
+    navigationBarTitleText: '引用组件'
+  };
+
+  data = {
+    inputValue: 1,
+    test1: 999,
+    watchNum: '',
+    parent: '初始值',
+    loadState: ''
+  };
+  mixins = [Mixins]
+  computed = {
+    aPlus () {
+          return this.inputValue + 5
+      }
+  }
+
+  watch = { // 可以监控data和computed的值
+    inputValue (newValue,oldValue) {
+      console.log('监听的值',newValue,oldValue)
+      this.watchNum = `监听值：新${newValue}，老${oldValue}`
+    }
+  }
+
+  components = {
+    child: Child
+  };
+
+  methods = {
+    log() {
+      console.log('绑定事件',this);
+      this.loadState = '1'
+    },
+    inputChange({detail: { value }}) {
+      this.inputValue = Number(value)
+    },
+    plus () {
+      this.dispatcher.example.plus(this.inputValue)
+    },
+    sub () {
+      this.dispatcher.example.sub(this.inputValue)
+    },
+    parentFn (num,evt) {
+      this.parent = `父组件接受到:${num}`
+    },
+    scrolltolower () {
+      console.log('到底了');
+
+    }
+  };
+
+  onLoad = function () {
+    console.log('打印this',this);
+    this.loadState = this.example.loadState
+  }
+
+
+
+}
+</script >

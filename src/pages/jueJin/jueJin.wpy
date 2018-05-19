@@ -1,0 +1,31 @@
+<style lang="less">
+.container {
+
+}
+</style>
+<template>
+  <view class="container">
+    <view>掘金</view>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy';
+import wepyx, { connect } from 'wepyx';
+
+@connect({
+  jueJin: state => state.jueJin
+})
+export default class JueJin extends wepy.page {
+  config = {
+    navigationBarTitleText: '掘金'
+  };
+  data = {
+    inputValue: 1
+  };
+
+  methods = {
+
+  };
+}
+</script>

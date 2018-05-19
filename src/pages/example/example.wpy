@@ -1,0 +1,36 @@
+<style lang="less">
+.container {
+  .nav {
+    margin-left: 50rpx;
+    margin-bottom: 20rpx
+  }
+}
+</style>
+<template>
+  <view class="container">
+    <repeat for="{{example.exampleList}}" key="index">
+      <navigator class="nav" url="{{item.url}}">* {{item.name}} >></navigator>
+    </repeat>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy';
+import { connect } from 'wepyx';
+
+@connect({
+  example: state => state.example
+})
+export default class JueJin extends wepy.page {
+  config = {
+    navigationBarTitleText: '示例'
+  };
+  data = {
+
+  };
+
+  methods = {
+
+  };
+}
+</script>

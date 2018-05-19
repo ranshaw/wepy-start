@@ -1,0 +1,31 @@
+
+<script >
+import wepy from 'wepy'
+import { connect } from 'wepyx'
+
+// @connect({
+//   example: state => state.example
+// })
+
+export default class Mixins extends wepy.mixin {
+  config = {
+    navigationBarTitleText: '例子'
+  }
+
+  data = {
+    foo: 'foo defined by page',
+    bar: 'bar defined by testMix'
+  }
+  watch = {
+    loadState (newValue,oldValue) {
+      console.log('newValue,oldValue',newValue,oldValue)
+    }
+  }
+  methods = {
+    log () {
+      console.log('mix tap this',this);
+    }
+  }
+
+}
+</script>

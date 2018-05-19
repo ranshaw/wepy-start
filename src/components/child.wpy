@@ -1,0 +1,70 @@
+<style lang="less">
+.containers {
+  font-size: 30rpx;
+}
+</style>
+<template>
+  <view class="containers">
+    <view @tap="log">子组件事件</view>
+    <view>子组件接受的静态值：{{test}}</view>
+    <view>子组件接受的动态值：{{syncTest}}</view>
+    <view>子组件接受的双向绑定值：{{twoWayTest}}</view>
+    <view @tap.stop="changeParentData">点击改变父组件的值</view>
+    <slot name="title">默认插槽数据</slot>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy';
+import wepyx, { connect } from 'wepyx';
+
+
+@connect({
+  jueJin: state => state.jueJin
+})
+export default class Child extends wepy.component {
+  config = {
+    navigationBarTitleText: '子组件'
+  };
+
+  data = {
+    inputValue: 1
+  };
+
+  props = {
+      test2: String,
+      test: Number,     // 接收静态属性
+      syncTest: {       // 接收动态属性
+        type: Number,
+        default: 'null'
+      },
+      twoWayTest: {    // 数据双向绑定 计算属性不能双向绑定
+        type: Number,
+        default: 'null',
+        twoWay: true
+      }
+  }
+
+  methods = {
+    log () {
+      console.log('点击子组件',this)
+      this.$emit('childFn',100)
+      this.test =  7777
+      this.twoWayTest = 9999
+      this.test = 8888
+    },
+    changeParentData () {
+      console.log('改变父组件的值')
+      this.twoWayTest = 10
+
+    }
+  }
+  onPullDownRefresh = function () {
+    console.log('下拉');
+
+  }
+  onLoad () {
+    console.log('传入子组件的值',this)
+  }
+}
+</script>
